@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"package": "de.klotzi111.ktig.impl.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"plugin": "de.klotzi111.ktig.impl.mixin.KTIGMixinConfig",
+	"mixins": [],
+	"client": [
+		"keybinding.vanilla.KeyBindingAccessor",
+		"keybinding.vanilla.MixinKeyboard",
+		"keybinding.vanilla.MixinMouse",
+		
+		"keybinding.amecsapi.MixinMouse"
+	],
+	"server": [],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

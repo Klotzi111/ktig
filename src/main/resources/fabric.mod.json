@@ -1,0 +1,44 @@
+{
+	"schemaVersion": 1,
+	"id": "ktig",
+	"version": "${version}",
+	"name": "KTIG",
+	"description": "(Keybinding Testing In GUI) Library to test whether a certain keybinding is being pressed while a gui/screen is open",
+	"authors": [
+		"Klotzi111"
+	],
+	"contributors": [],
+	"contact": {
+		"homepage": "https://github.com/Klotzi111/ktig",
+		"issues": "https://github.com/Klotzi111/ktig/issues",
+		"sources": "https://github.com/Klotzi111/ktig"
+	},
+	"license": "Apache-2.0",
+	"icon": "assets/ktig/icon.png",
+	"environment": "Client",
+	"entrypoints": {
+		"main": [],
+		"client": [
+			"de.klotzi111.ktig.impl.KTIGMod"
+		],
+		"server": []
+	},
+	"mixins": [
+		"ktig.mixins.json"
+	],
+	"custom": {
+		"modmenu:api": true,
+		"modmenu": {
+			"badges": [
+				"library"
+			]
+		}
+	},
+	"depends": {
+    	"java": ">=8"
+	},
+	"suggests": {
+		"amecsapi": ">=1.2.1",
+		"nmuk": ">=1.1.0"
+	}
+}
