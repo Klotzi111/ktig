@@ -106,6 +106,8 @@ public class KTIG {
 	/**
 	 * This method tests whether the given keyBinding's press count since the last check is odd.
 	 * <br>
+	 * The presses will be consumed.
+	 * <br>
 	 * Examples: Press count -> return value
 	 * <br>
 	 * 0 -> false
@@ -120,12 +122,25 @@ public class KTIG {
 	 *
 	 * @return whether the keybinding's press count is odd
 	 */
-	public static boolean isKeyBindingPressed(KeyBinding keyBinding) {
-		boolean pressed = false;
+	public static boolean wasKeyBindingPressed(KeyBinding keyBinding) {
+		return getPressedCount(keyBinding) % 2 == 1;
+	}
+
+	/**
+	 * This method returns the press count of the given keyBinding since the last check.
+	 * <br>
+	 * The presses will be consumed.
+	 *
+	 * @param keyBinding
+	 *
+	 * @return the keybinding's press count
+	 */
+	public static int getPressedCount(KeyBinding keyBinding) {
+		int count = 0;
 		while (keyBinding.wasPressed()) {
-			pressed = !pressed;
+			count++;
 		}
-		return pressed;
+		return count;
 	}
 
 }
