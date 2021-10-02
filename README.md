@@ -1,6 +1,6 @@
 # KTIG (short for: Keybinding Testing In GUI)
 
-This fabric library mod provides methods for testing whether a Minecraft keybindings is pressed while the game shows a GUI. It also works when no GUI is shown.
+This fabric library mod provides methods for testing whether Minecraft keybindings are pressed while the game shows a GUI. It also works when no GUI is shown.
 
 The reason for making this library was because I have seen many mods having the problem of checking keys bound to keybindings being pressed in GUIs but do not deal with special cases like:
  - Mouse buttons
@@ -40,7 +40,7 @@ To test a keybinding in gui first register the keybinding to be triggered when i
 // replace the next line with you KeyBinding creation and registration
 KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding("key.MOD.NAME", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "key.category.MOD"));
 // then register it for some trigger points
-// here MAIN_WINDOW_BIT is used. This is trigger point usually used when you want to receive all key events in all guis
+// here MAIN_WINDOW_BIT is used. This is the trigger point usually used when you want to receive all key events in all guis
 // NO_VANILLA_BIT is used to avoid being triggered twice (on MAIN_WINDOW_BIT and on vanilla trigger) when there is no gui currently shown
 KTIG.registerKeyBindingForTriggerPoints(keyBinding, KeyBindingTriggerPoints.MAIN_WINDOW_BIT | KeyBindingTriggerPoints.NO_VANILLA_BIT);
 ```

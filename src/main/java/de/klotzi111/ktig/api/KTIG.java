@@ -28,33 +28,33 @@ public class KTIG {
 	public static boolean CURRENT_EVENT_KEY_CONSUMED = false;
 
 	/**
-	 * Registers the keyBinding for all the trigger points in {@code triggerPoints}
+	 * Registers the {@code keyBinding} for all the trigger points in {@code triggerPoints}
 	 *
 	 * @param keyBinding
 	 * @param triggerPoints
-	 * @return a bit mask containing all the bits of the trigger points for which the keyBinding was registered
+	 * @return a bit mask containing all the bits of the trigger points for which the {@code keyBinding} was registered
 	 */
 	public static int registerKeyBindingForTriggerPoints(KeyBinding keyBinding, int triggerPoints) {
 		return KTIGHelper.doAndSumForAllBits(triggerPoints, bit -> addKeyBinding(bit, keyBinding));
 	}
 
 	/**
-	 * Unregisters the keyBinding for all the trigger points in {@code triggerPoints}
+	 * Unregisters the {@code keyBinding} for all the trigger points in {@code triggerPoints}
 	 *
 	 * @param keyBinding
 	 * @param triggerPoints
-	 * @return a bit mask containing all the bits of the trigger points for which the keyBinding was unregistered
+	 * @return a bit mask containing all the bits of the trigger points for which the {@code keyBinding} was unregistered
 	 */
 	public static int unregisterKeyBindingForTriggerPoints(KeyBinding keyBinding, int triggerPoints) {
 		return KTIGHelper.doAndSumForAllBits(triggerPoints, bit -> removeKeyBinding(bit, keyBinding));
 	}
 
 	/**
-	 * Gets all the trigger points for which the keyBinding is registered
+	 * Gets all the trigger points for which the {@code keyBinding} is registered
 	 *
 	 * @param keyBinding
 	 * @param triggerPoints
-	 * @return a bit mask containing all the bits of the trigger points for which the keyBinding is registered
+	 * @return a bit mask containing all the bits of the trigger points for which the {@code keyBinding} is registered
 	 */
 	public static int getKeyBindingRegisteredForTriggerPoints(KeyBinding keyBinding) {
 		return KTIGHelper.doAndSumForAllBits(-1, bit -> containsKeyBinding(bit, keyBinding));
@@ -64,7 +64,7 @@ public class KTIG {
 	 *
 	 * @param triggerPoint
 	 * @param keyBinding
-	 * @return whether the keyBinding was added (not already contained)
+	 * @return whether the {@code keyBinding} was added (not already contained)
 	 */
 	private static boolean addKeyBinding(int triggerPoint, KeyBinding keyBinding) {
 		ObjectOpenCustomHashSet<KeyBinding> set = TRIGGERPOINT_KEYBINDINGS.get(triggerPoint);
@@ -79,7 +79,7 @@ public class KTIG {
 	 *
 	 * @param triggerPoint
 	 * @param keyBinding
-	 * @return whether the keyBinding was removed (was contained)
+	 * @return whether the {@code keyBinding} was removed (was contained)
 	 */
 	private static boolean removeKeyBinding(int triggerPoint, KeyBinding keyBinding) {
 		ObjectOpenCustomHashSet<KeyBinding> set = TRIGGERPOINT_KEYBINDINGS.get(triggerPoint);
@@ -90,10 +90,11 @@ public class KTIG {
 	}
 
 	/**
+	 * Returns whether the {@code keyBinding} was registered for the {@code triggerPoint}
 	 *
-	 * @param triggerPoint
+	 * @param triggerPoint only one trigger point bit is allowed
 	 * @param keyBinding
-	 * @return whether the keyBinding is contained
+	 * @return whether the {@code keyBinding} is contained
 	 */
 	public static boolean containsKeyBinding(int triggerPoint, KeyBinding keyBinding) {
 		ObjectOpenCustomHashSet<KeyBinding> set = TRIGGERPOINT_KEYBINDINGS.get(triggerPoint);
@@ -104,7 +105,7 @@ public class KTIG {
 	}
 
 	/**
-	 * This method tests whether the given keyBinding's press count since the last check is odd.
+	 * This method tests whether the given {@code keyBinding}'s press count since the last check is odd.
 	 * <br>
 	 * The presses will be consumed.
 	 * <br>
@@ -120,20 +121,20 @@ public class KTIG {
 	 *
 	 * @param keyBinding
 	 *
-	 * @return whether the keybinding's press count is odd
+	 * @return whether the {@code keybinding}'s press count is odd
 	 */
 	public static boolean wasKeyBindingPressed(KeyBinding keyBinding) {
 		return getPressedCount(keyBinding) % 2 == 1;
 	}
 
 	/**
-	 * This method returns the press count of the given keyBinding since the last check.
+	 * This method returns the press count of the given {@code keyBinding} since the last check.
 	 * <br>
 	 * The presses will be consumed.
 	 *
 	 * @param keyBinding
 	 *
-	 * @return the keybinding's press count
+	 * @return the {@code keybinding}'s press count
 	 */
 	public static int getPressedCount(KeyBinding keyBinding) {
 		int count = 0;

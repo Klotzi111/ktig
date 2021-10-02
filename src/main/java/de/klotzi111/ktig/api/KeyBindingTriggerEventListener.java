@@ -1,5 +1,7 @@
 package de.klotzi111.ktig.api;
 
+import org.lwjgl.glfw.GLFW;
+
 import net.minecraft.client.util.InputUtil.Key;
 
 public interface KeyBindingTriggerEventListener {
@@ -26,7 +28,7 @@ public interface KeyBindingTriggerEventListener {
 	 * This method can 'uncancel' a trigger event.
 	 *
 	 * @param triggerPoint
-	 * @param action what happened with the key. See GLFW constants: PRESS, RELEASE, REPEAT
+	 * @param action what happened with the key. See GLFW constants: {@link GLFW#GLFW_PRESS}, {@link GLFW#GLFW_RELEASE}, {@link GLFW#GLFW_REPEAT}
 	 * @param key the key that was pressed, resolved from the mapping table with the raw key event data. This is useful when having an other mod that enables multiple keys on one keybinding nmuk for example
 	 * @param keyConsumed whether the key matching this keybinding was already consumed by an other keybinding
 	 * @param cancelled whether the event is currently cancelled
@@ -40,12 +42,12 @@ public interface KeyBindingTriggerEventListener {
 	/**
 	 * This method is called when the keybinding is triggered.
 	 * <br>
-	 * See {@link #onTrigger(int, boolean, boolean)} for more control over whether the event should stay cancelled.
+	 * See {@link #onTrigger(int, int, Key, boolean, boolean)} for more control over whether the event should stay cancelled.
 	 *
-	 * @see #onTrigger(int, boolean, boolean)
+	 * @see #onTrigger(int, int, Key, boolean, boolean)
 	 *
 	 * @param triggerPoint
-	 * @param action what happened with the key. See GLFW constants: PRESS, RELEASE, REPEAT
+	 * @param action what happened with the key. See GLFW constants: {@link GLFW#GLFW_PRESS}, {@link GLFW#GLFW_RELEASE}, {@link GLFW#GLFW_REPEAT}
 	 * @param key the key that was pressed, resolved from the mapping table with the raw key event data. This is useful when having an other mod that enables multiple keys on one keybinding nmuk for example
 	 * @param keyConsumed whether the key matching this keybinding was already consumed by an other keybinding
 	 * @return whether the event should be canceled. If an event is cancelled after all the keyBindings of the current trigger point has been processed, the event will NOT reach further trigger points

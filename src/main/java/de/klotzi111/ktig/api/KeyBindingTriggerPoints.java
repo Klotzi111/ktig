@@ -21,7 +21,7 @@ public class KeyBindingTriggerPoints {
 	/**
 	 * With this trigger point the keybinding will be triggered only if there is no screen currently open (or if the screen has set passEvents to true).
 	 * <br>
-	 * This is very close to the vanilla behavior. It is triggered short before the vanilla logic. This is useful if you want to cancel the event for the vanilla logic.
+	 * This is very close to the vanilla behavior. It is triggered just before the vanilla logic. This is useful if you want to cancel the event for the vanilla logic.
 	 */
 	public static int NO_SCREEN_BIT = 0b01000;
 
