@@ -3,8 +3,6 @@ package de.klotzi111.ktig.impl;
 import java.util.List;
 import java.util.stream.Stream;
 
-import org.lwjgl.glfw.GLFW;
-
 import de.klotzi111.ktig.api.KTIG;
 import de.klotzi111.ktig.api.KeyBindingTriggerEventListener;
 import de.klotzi111.ktig.api.KeyBindingTriggerPoints;
@@ -78,24 +76,7 @@ public class KTIGHelper {
 
 		@Override
 		public boolean onTrigger(int triggerPoint, int action, Key key, boolean keyConsumed) {
-			if (currentKeyBinding != null) {
-				if (action == GLFW.GLFW_RELEASE) {
-					actionRelease();
-				} else {
-					// PRESS or REPEAT
-					actionPress();
-				}
-			}
-			return false;
-		}
-
-		public void actionPress() {
-			KeyBindingManagerLoader.INSTANCE.setPressed(currentKeyBinding, true);
-			KeyBindingManagerLoader.INSTANCE.incrementPressCount(currentKeyBinding);
-		}
-
-		public void actionRelease() {
-			KeyBindingManagerLoader.INSTANCE.setPressed(currentKeyBinding, false);
+			return KeyBindingTriggerEventListener.onTriggerDefaultKeyBinding(currentKeyBinding, triggerPoint, action, key, keyConsumed);
 		}
 	}
 

@@ -6,6 +6,9 @@ import java.util.List;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil.Key;
 
+/**
+ * Implementation note: When adding new methods to this interface make sure to also proxy these methods in {@link ProxyKeyBindingManager}
+ */
 public interface KeyBindingManager {
 
 	public default void onModInit() {

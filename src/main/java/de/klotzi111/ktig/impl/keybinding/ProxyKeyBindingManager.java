@@ -8,7 +8,9 @@ import net.minecraft.client.util.InputUtil.Key;
 
 public abstract class ProxyKeyBindingManager implements KeyBindingManager {
 
-	// this value is set after construction
+	/**
+	 * this value is set after construction
+	 */
 	public KeyBindingManager delegate;
 
 	public ProxyKeyBindingManager() {

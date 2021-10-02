@@ -2,6 +2,8 @@ package de.klotzi111.ktig.api;
 
 import org.lwjgl.glfw.GLFW;
 
+import de.klotzi111.ktig.impl.keybinding.KeyBindingManagerLoader;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil.Key;
 
 public interface KeyBindingTriggerEventListener {
@@ -53,4 +55,35 @@ public interface KeyBindingTriggerEventListener {
 	 * @return whether the event should be canceled. If an event is cancelled after all the keyBindings of the current trigger point has been processed, the event will NOT reach further trigger points
 	 */
 	public boolean onTrigger(int triggerPoint, int action, Key key, boolean keyConsumed);
+
+	/**
+	 * This method does the default behavior when a keyBinding is pressed or released
+	 *
+	 * @param keyBinding the keyBinding triggered
+	 * @param triggerPoint
+	 * @param action what happened with the key. See GLFW constants: {@link GLFW#GLFW_PRESS}, {@link GLFW#GLFW_RELEASE}, {@link GLFW#GLFW_REPEAT}
+	 * @param key the key that was pressed, resolved from the mapping table with the raw key event data. This is useful when having an other mod that enables multiple keys on one keybinding nmuk for example
+	 * @param keyConsumed whether the key matching this keybinding was already consumed by an other keybinding
+	 * @return whether the event should be canceled. If an event is cancelled after all the keyBindings of the current trigger point has been processed, the event will NOT reach further trigger points
+	 */
+	public static boolean onTriggerDefaultKeyBinding(KeyBinding keyBinding, int triggerPoint, int action, Key key, boolean keyConsumed) {
+		if (keyBinding != null) {
+			if (action == GLFW.GLFW_RELEASE) {
+				actionDefaultRelease(keyBinding);
+			} else {
+				// PRESS or REPEAT
+				actionDefaultPress(keyBinding);
+			}
+		}
+		return false;
+	}
+
+	public static void actionDefaultPress(KeyBinding keyBinding) {
+		KeyBindingManagerLoader.INSTANCE.setPressed(keyBinding, true);
+		KeyBindingManagerLoader.INSTANCE.incrementPressCount(keyBinding);
+	}
+
+	public static void actionDefaultRelease(KeyBinding keyBinding) {
+		KeyBindingManagerLoader.INSTANCE.setPressed(keyBinding, false);
+	}
 }
