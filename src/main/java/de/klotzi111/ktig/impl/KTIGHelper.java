@@ -45,8 +45,8 @@ public class KTIGHelper {
 	 * @return whether the event should be cancelled
 	 */
 	public static boolean processKeyBindingTrigger(int triggerPoint, long window, Key key, int action, int modifiers, boolean cancellable) {
-		// if the triggerPoint is vanilla the check in the map is inverted. Meaning if there is a keybinding registered for NO_VANILLA_BIT it will NOT be triggered when NO_VANILLA_BIT arrives
-		boolean isVanilla = triggerPoint == KeyBindingTriggerPoints.NO_VANILLA_BIT;
+		// if the triggerPoint is vanilla the check in the map is inverted. Meaning if there is a keybinding registered for NO_VANILLA_BIT it will NOT be triggered when VANILLA_BIT arrives
+		boolean isVanilla = triggerPoint == KeyBindingTriggerPoints.VANILLA_BIT;
 		ObjectOpenCustomHashSet<KeyBinding> set = KTIG.TRIGGERPOINT_KEYBINDINGS.get(triggerPoint);
 		if (!isVanilla && (set == null || set.isEmpty())) {
 			return false;
@@ -90,10 +90,10 @@ public class KTIGHelper {
 			eventListener = (KeyBindingTriggerEventListener) keyBinding;
 		}
 		if (cancelled && !eventListener.ignoreCancelled()) {
-			return false;
+			return cancelled;
 		}
 		if (KTIG.CURRENT_EVENT_KEY_CONSUMED && !eventListener.ignoreKeyConsumed()) {
-			return false;
+			return cancelled;
 		}
 
 		boolean cancelledRet = eventListener.onTrigger(triggerPoint, action, key, KTIG.CURRENT_EVENT_KEY_CONSUMED, cancelled);

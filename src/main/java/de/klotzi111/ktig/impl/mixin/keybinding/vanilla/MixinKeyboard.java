@@ -3,6 +3,7 @@ package de.klotzi111.ktig.impl.mixin.keybinding.vanilla;
 import org.lwjgl.glfw.GLFW;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -54,10 +55,21 @@ public class MixinKeyboard {
 		}
 	}
 
+	@Unique
+	private boolean setKeyPressedCancelled = false;
+
 	@Redirect(method = "onKey", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;setKeyPressed(Lnet/minecraft/client/util/InputUtil$Key;Z)V"))
 	private void redirect_setKeyPressed(Key key, boolean pressed, long window, int keycode, int scancode, int action, int modifiers) {
-		// not cancellable
-		KTIGHelper.processKeyBindingTrigger(KeyBindingTriggerPoints.NO_VANILLA_BIT, window, key, pressed ? (action != GLFW.GLFW_RELEASE ? action : GLFW.GLFW_PRESS) : GLFW.GLFW_RELEASE, modifiers, false);
+		setKeyPressedCancelled = KTIGHelper.processKeyBindingTrigger(KeyBindingTriggerPoints.VANILLA_BIT, window, key, pressed ? (action != GLFW.GLFW_RELEASE ? action : GLFW.GLFW_PRESS) : GLFW.GLFW_RELEASE,
+			modifiers, true);
+	}
+
+	@Inject(method = "onKey", at = @At(value = "INVOKE", shift = Shift.AFTER, target = "Lnet/minecraft/client/option/KeyBinding;setKeyPressed(Lnet/minecraft/client/util/InputUtil$Key;Z)V"), cancellable = true)
+	private void injection_VANILLA_BIT(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
+		if (setKeyPressedCancelled) {
+			setKeyPressedCancelled = false;
+			ci.cancel();
+		}
 	}
 
 	@Redirect(method = "onKey", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;onKeyPressed(Lnet/minecraft/client/util/InputUtil$Key;)V"))

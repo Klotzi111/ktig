@@ -151,21 +151,21 @@ public class MixinMouse {
 	}
 
 	@Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-	private void injection_isSpectator_NO_VANILLA_BIT(long window, double rawX, double rawY, CallbackInfo ci, double deltaY, float g) {
+	private void injection_isSpectator_VANILLA_BIT(long window, double rawX, double rawY, CallbackInfo ci, double deltaY, float g) {
 		// we are here in the else branch of "this.client.currentScreen != null" meaning currentScreen == null
-		int triggerPoint = KeyBindingTriggerPoints.NO_VANILLA_BIT;
+		int triggerPoint = KeyBindingTriggerPoints.VANILLA_BIT;
 		if (onScrollReceived(triggerPoint, deltaY, new ProcessKeyBindingTriggerKeyAndPressDefault(window, triggerPoint), false, g)) {
 			ci.cancel();
 		}
 	}
 
 	@ModifyVariable(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z", ordinal = 0), ordinal = 2)
-	private double after_NO_VANILLA_BIT(double d) {
+	private double after_VANILLA_BIT(double d) {
 		return decValAndReset(d);
 	}
 
 	@ModifyVariable(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z", ordinal = 0), ordinal = 0)
-	private float g_after_NO_VANILLA_BIT(float g) {
+	private float g_after_VANILLA_BIT(float g) {
 		return (float) decValAndReset(g);
 	}
 

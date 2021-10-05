@@ -58,7 +58,7 @@ public class MixinMouse {
 	@Redirect(method = "onMouseButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;setKeyPressed(Lnet/minecraft/client/util/InputUtil$Key;Z)V"))
 	private void redirect_setKeyPressed(Key key, boolean pressed, long window, int button, int action, int mods) {
 		// not cancellable
-		KTIGHelper.processKeyBindingTrigger(KeyBindingTriggerPoints.NO_VANILLA_BIT, window, key, pressed ? GLFW.GLFW_PRESS : GLFW.GLFW_RELEASE, 0, false);
+		KTIGHelper.processKeyBindingTrigger(KeyBindingTriggerPoints.VANILLA_BIT, window, key, pressed ? GLFW.GLFW_PRESS : GLFW.GLFW_RELEASE, 0, false);
 	}
 
 	@Redirect(method = "onMouseButton", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/KeyBinding;onKeyPressed(Lnet/minecraft/client/util/InputUtil$Key;)V"))

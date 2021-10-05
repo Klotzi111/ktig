@@ -29,8 +29,21 @@ public class KeyBindingTriggerPoints {
 	 * With this trigger point the keybinding will NOT be triggered if the vanilla logic triggers it.
 	 * <br>
 	 * This disables the default vanilla behavior.
+	 * <br>
+	 * Use this value for keybinding registration. Use {@link #VANILLA_BIT} for comparison in the {@link KeyBindingTriggerEventListener#onTrigger} methods
+	 *
+	 * @see #VANILLA_BIT
 	 */
 	public static int NO_VANILLA_BIT = 0b10000;
+
+	/**
+	 * This trigger point value is received in the {@link KeyBindingTriggerEventListener#onTrigger} methods
+	 * <br>
+	 * Use this value for comparison in the {@link KeyBindingTriggerEventListener#onTrigger} methods. Use {@link #NO_VANILLA_BIT} for keybinding registration
+	 *
+	 * @see #NO_VANILLA_BIT
+	 */
+	public static int VANILLA_BIT = 0b10000;
 
 	public static boolean areAllBitsSet(int bits, int checkBits) {
 		return (bits & checkBits) == checkBits;

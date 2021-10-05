@@ -27,6 +27,7 @@ public class KTIG {
 	@ApiStatus.Internal
 	public static boolean CURRENT_EVENT_KEY_CONSUMED = false;
 
+	// TODO: add priority int for all registrations and regis getter
 	/**
 	 * Registers the {@code keyBinding} for all the trigger points in {@code triggerPoints}
 	 *
