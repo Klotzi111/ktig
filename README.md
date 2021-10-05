@@ -31,9 +31,10 @@ dependencies {
 }
 ```
 
-## Example
+## Examples
 (All the names from Minecraft code below are from the [yarn mappings](https://github.com/FabricMC/yarn "yarn on GitHub"))
 
+### Basic
 To test a keybinding in gui first register the keybinding to be triggered when in gui:
 
 ```Java
@@ -51,4 +52,38 @@ Then to test whether the keybinding was pressed use the normal way of checking i
 while (keyBinding.wasPressed()) {
 	// do something when it was pressed
 }
+```
+
+### Advanced
+KTIG additionally has a more advanced and more powerful API. With this API you can get a event whenever a certain keybinding is about to be pressed or released and ignore it, allow it or even cancel the key event so that no other keybindings with the same key are triggered.
+
+First you need to create a custom keybinding class that is a instance of KeyBinding and implements the API interface class `KeyBindingTriggerEventListener`:
+
+```Java
+public class KTIGTestKeyBinding extends KeyBinding implements KeyBindingTriggerEventListener {
+
+	public KTIGTestKeyBinding(String translationKey, Type type, int code, String category) {
+		super(translationKey, type, code, category);
+	}
+
+	// read the javadoc for more information
+	@Override
+	public boolean onTrigger(int triggerPoint, int action, Key key, boolean keyConsumed) {
+		// do whatever you like in this method
+
+		// you can also do the default behavior with
+		boolean defaultRet = KeyBindingTriggerEventListener.onTriggerDefaultKeyBinding(this, triggerPoint, action, key, keyConsumed);
+
+		// return whether to cancel the key event. See javadoc
+		return defaultRet;
+	}
+
+}
+```
+
+Then you can register a instance of your custom keybinding class as you would with a normal KeyBinding:
+
+```Java
+KTIGTestKeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KTIGTestKeyBinding("key.MOD.NAME", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "key.category.MOD"));
+
 ```
