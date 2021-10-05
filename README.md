@@ -17,7 +17,7 @@ The goal of this project is to deal with this keybinding problem in a central pl
 ## Usage
 As of now there is no maven repository to download it from.
 Do the following to use this library mod:
- - Download, build and publish this mod to your local maven repository
+ - Download, build and publish this mod to your local maven repository (use the gradle task `publishToMavenLocal` for that)
  - Add the following in your build.gradle:
  
 ```groovy
