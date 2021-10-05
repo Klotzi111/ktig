@@ -57,7 +57,7 @@ while (keyBinding.wasPressed()) {
 ### Advanced
 KTIG additionally has a more advanced and more powerful API. With this API you can get a event whenever a certain keybinding is about to be pressed or released and ignore it, allow it or even cancel the key event so that no other keybindings with the same key are triggered.
 
-First you need to create a custom keybinding class that is a instance of KeyBinding and implements the API interface class `KeyBindingTriggerEventListener`:
+First you need to create a custom keybinding class that extends KeyBinding (as some point) and implements the API interface class `KeyBindingTriggerEventListener`:
 
 ```Java
 public class KTIGTestKeyBinding extends KeyBinding implements KeyBindingTriggerEventListener {
@@ -84,6 +84,6 @@ public class KTIGTestKeyBinding extends KeyBinding implements KeyBindingTriggerE
 Then you can register a instance of your custom keybinding class as you would with a normal KeyBinding:
 
 ```Java
-KTIGTestKeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KTIGTestKeyBinding("key.MOD.NAME", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "key.category.MOD"));
+KeyBinding keyBinding = KeyBindingHelper.registerKeyBinding(new KTIGTestKeyBinding("key.MOD.NAME", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, "key.category.MOD"));
 
 ```
