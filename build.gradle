@@ -1,10 +1,10 @@
 plugins {
-	id 'fabric-loom' version '0.9-SNAPSHOT'
+	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
 }
 
 ext {
-	jdk_version = JavaVersion.VERSION_1_8
+	jdk_version = 8
 }
 
 sourceCompatibility = jdk_version
@@ -19,7 +19,7 @@ minecraft {
 
 repositories {
 	mavenLocal()
-    jcenter()
+	jcenter()
 }
 
 dependencies {
@@ -28,18 +28,30 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+	def fabric_deps = [
+			"fabric-api-base"		   : "0.4.1+b4f4f6cdd0",
+			"fabric-key-binding-api-v1": "1.0.8+c8aba2f3c8",
+			"fabric-resource-loader-v0": "0.4.9+65d505fcd1"
+	]
+	for (dep in fabric_deps.entrySet()) {
+		// does not work
+		// def depModule = fabricApi.module(dep.getKey(), dep.getValue())
+		def depStr = "net.fabricmc.fabric-api:" + dep.getKey() + ":" + dep.getValue()
+		include(modImplementation(depStr))
+	}
 
 	//amecs api
-	modCompileOnly("de.siphalor:amecsapi-1.17:1.2.1+") {
-        exclude(group: "de.siphalor")
-    }
-    
-    //nmuk
-	modCompileOnly("de.siphalor:nmuk-1.17:1.1+") {
-        exclude(group: "de.siphalor")
-    }
-    
+	modCompileOnly("de.siphalor:amecsapi-multiversion:1.3.3+") {
+		exclude(group: "de.siphalor")
+		exclude(module: "lazydfu")
+	}
+	
+	//nmuk
+	modCompileOnly("de.siphalor:nmuk-multiversion:1.1+") {
+		exclude(group: "de.siphalor")
+		exclude(module: "lazydfu")
+	}
+	
 }
 
 processResources {
@@ -56,9 +68,7 @@ tasks.withType(JavaCompile) {
 	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 	// If Javadoc is generated, this must be specified in that task too.
 	options.encoding = "UTF-8"
-	
-	def versionNumberPart = jdk_version.name().split("_");
-	options.release = Integer.parseInt(versionNumberPart[versionNumberPart.length - 1])
+	options.release = jdk_version
 }
 
 java {
@@ -77,14 +87,8 @@ jar {
 // configure the maven publication
 publishing {
 	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+		create("mavenJava", MavenPublication) {
+			from components.java
 		}
 	}
 
