@@ -117,7 +117,7 @@ public class MixinMouse {
 		return decValAndReset(d);
 	}
 
-	@Inject(method = "onMouseScroll", at = @At(value = "INVOKE", shift = Shift.AFTER, target = "Lnet/minecraft/client/gui/screen/Screen;mouseScrolled(DDD)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
+	@Inject(method = "onMouseScroll", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/gui/screen/Screen;mouseScrolled(DDD)Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT)
 	private void injection_NON_SCREEN_PROCESSED(long window, double horizontal, double vertical, CallbackInfo ci, double deltaY) {
 		if (((IMouse) this).amecs$getMouseScrolledEventUsed()) {
 			return;
@@ -131,7 +131,7 @@ public class MixinMouse {
 	}
 
 	// does not actually affect anything because the method ends after this. But if it is here for compatibility with other mods
-	@ModifyVariable(method = "onMouseScroll", at = @At(value = "INVOKE", shift = Shift.AFTER, target = "Lnet/minecraft/client/gui/screen/Screen;mouseScrolled(DDD)Z", ordinal = 0), ordinal = 2)
+	@ModifyVariable(method = "onMouseScroll", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/gui/screen/Screen;mouseScrolled(DDD)Z", ordinal = 0), ordinal = 2)
 	private double after_NON_SCREEN_PROCESSED(double d) {
 		return decValAndReset(d);
 	}
