@@ -20,6 +20,7 @@ public class MinimumModVersionChecker implements ModSemanticVersionChecker {
 		}
 	}
 
+	@SuppressWarnings("deprecation") // can not use the new/non-deprecated method because it does not exist on older versions of fabric
 	@Override
 	public boolean isSemanticVersionSupported(SemanticVersion modVersion) {
 		return modVersion.compareTo(minimumRequiredVersion) >= 0;

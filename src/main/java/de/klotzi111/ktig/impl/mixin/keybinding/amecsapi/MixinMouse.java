@@ -6,7 +6,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.At.Shift;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -104,7 +103,11 @@ public class MixinMouse {
 		return decValAndReset(d);
 	}
 
-	@Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getOverlay()Lnet/minecraft/client/gui/screen/Overlay;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
+	@Inject(
+		method = "onMouseScroll",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getOverlay()Lnet/minecraft/client/gui/screen/Overlay;", ordinal = 0),
+		locals = LocalCapture.CAPTURE_FAILSOFT,
+		cancellable = true)
 	private void injection_MAIN_WINDOW(long window, double horizontal, double vertical, CallbackInfo ci, double deltaY) {
 		int triggerPoint = KeyBindingTriggerPoints.MAIN_WINDOW_BIT;
 		if (onScrollReceived(triggerPoint, deltaY, new ProcessKeyBindingTriggerKeyAndPressDefault(window, triggerPoint), true, 0)) {
@@ -136,7 +139,11 @@ public class MixinMouse {
 		return decValAndReset(d);
 	}
 
-	@Inject(method = "onMouseScroll", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;player:Lnet/minecraft/client/network/ClientPlayerEntity;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, cancellable = true)
+	@Inject(
+		method = "onMouseScroll",
+		at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;player:Lnet/minecraft/client/network/ClientPlayerEntity;", ordinal = 0),
+		locals = LocalCapture.CAPTURE_FAILSOFT,
+		cancellable = true)
 	private void injection_NO_SCREEN(long window, double horizontal, double vertical, CallbackInfo ci, double deltaY) {
 		// we are here in the else branch of "this.client.currentScreen != null" meaning currentScreen == null
 		int triggerPoint = KeyBindingTriggerPoints.NO_SCREEN_BIT;
@@ -145,12 +152,19 @@ public class MixinMouse {
 		}
 	}
 
-	@ModifyVariable(method = "onMouseScroll", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;player:Lnet/minecraft/client/network/ClientPlayerEntity;", ordinal = 0), ordinal = 2)
+	@ModifyVariable(
+		method = "onMouseScroll",
+		at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;player:Lnet/minecraft/client/network/ClientPlayerEntity;", ordinal = 0),
+		ordinal = 2)
 	private double after_NO_SCREEN(double d) {
 		return decValAndReset(d);
 	}
 
-	@Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	@Inject(
+		method = "onMouseScroll",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isSpectator()Z", ordinal = 0),
+		locals = LocalCapture.CAPTURE_FAILHARD,
+		cancellable = true)
 	private void injection_isSpectator_VANILLA_BIT(long window, double rawX, double rawY, CallbackInfo ci, double deltaY, float g) {
 		// we are here in the else branch of "this.client.currentScreen != null" meaning currentScreen == null
 		int triggerPoint = KeyBindingTriggerPoints.VANILLA_BIT;
