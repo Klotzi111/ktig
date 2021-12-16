@@ -15,7 +15,24 @@ If you know a mod which adds such named features that causes problems with other
 The goal of this project is to deal with this keybinding problem in a central place.
 
 ## Usage
-As of now there is no maven repository to download it from.
+You can get it via jitpack or compile it yourself.
+
+### Jitpack
+Add the following in your build.gradle:
+
+```groovy
+repositories {
+	maven {
+		url "https://jitpack.io"
+	}
+}
+
+dependencies {
+    include(modApi("com.github.Klotzi111:ktig:main-SNAPSHOT"))
+}
+```
+
+### Compile self
 Do the following to use this library mod:
  - Download, build and publish this mod to your local maven repository (use the gradle task `publishToMavenLocal` for that)
  - Add the following in your build.gradle:
@@ -26,8 +43,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation "de.klotzi111:KTIG:1+"
-    include "de.klotzi111:KTIG:1+"
+    include(modApi("de.klotzi111:KTIG:1+"))
 }
 ```
 
