@@ -12,12 +12,13 @@ import de.klotzi111.ktig.impl.keybinding.helper.ModInfo;
 import de.klotzi111.ktig.impl.util.IdentityHashStrategy;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap.Entry;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
 
-public class MultipleKeyBindingManagerManager implements KeyBindingManager {
+public class MultipleKeyBindingManagerManager extends KeyBindingManager {
 
 	public final Map<ModInfo, KeyBindingManager> keyBindingManagers;
 
@@ -27,6 +28,14 @@ public class MultipleKeyBindingManagerManager implements KeyBindingManager {
 
 	private void doForEachKBM(Consumer<KeyBindingManager> consumer) {
 		keyBindingManagers.values().stream().forEach(consumer);
+	}
+
+	private void doForFirstKBM(Consumer<KeyBindingManager> consumer) {
+		consumer.accept(keyBindingManagers.values().iterator().next());
+	}
+
+	private <R> R doForFirstKBMRet(Function<KeyBindingManager, R> function) {
+		return function.apply(keyBindingManagers.values().iterator().next());
 	}
 
 	@Override
@@ -70,10 +79,6 @@ public class MultipleKeyBindingManagerManager implements KeyBindingManager {
 		return getMostReportedKey((KBM) -> KBM.getKeyFromMouse(mouseButton), () -> "mouseButton=" + mouseButton);
 	}
 
-	private void doForFirstKBM(Consumer<KeyBindingManager> consumer) {
-		consumer.accept(keyBindingManagers.values().iterator().next());
-	}
-
 	@Override
 	public void incrementPressCount(KeyBinding keyBinding) {
 		doForFirstKBM((KBM) -> KBM.incrementPressCount(keyBinding));
@@ -85,10 +90,35 @@ public class MultipleKeyBindingManagerManager implements KeyBindingManager {
 	}
 
 	@Override
-	public List<KeyBinding> getKeyBindingsForKey(Key key) {
-		ObjectOpenCustomHashSet<KeyBinding> keyBindings = new ObjectOpenCustomHashSet<>(IdentityHashStrategy.IDENTITY_HASH_STRATEGY);
+	public ObjectLinkedOpenCustomHashSet<KeyBinding> getKeyBindingsForKey(Key key) {
+		ObjectLinkedOpenCustomHashSet<KeyBinding> keyBindings = new ObjectLinkedOpenCustomHashSet<>(IdentityHashStrategy.IDENTITY_HASH_STRATEGY);
 		doForEachKBM((KBM) -> keyBindings.addAll(KBM.getKeyBindingsForKey(key)));
-		return new ArrayList<>(keyBindings);
+		return keyBindings;
+	}
+
+	@Override
+	public boolean doesKeyBindingMatchTriggerPoint(int triggerPoint, KeyBinding keyBinding, ObjectOpenCustomHashSet<KeyBinding> triggerPointRegisteredSet) {
+		return doForFirstKBMRet((KBM) -> KBM.doesKeyBindingMatchTriggerPoint(triggerPoint, keyBinding, triggerPointRegisteredSet));
+	}
+
+	@Override
+	public boolean processKeyBindingTrigger(int triggerPoint, long window, Key key, int action, int modifiers, boolean cancellable) {
+		return doForFirstKBMRet((KBM) -> KBM.processKeyBindingTrigger(triggerPoint, window, key, action, modifiers, cancellable));
+	}
+
+	@Override
+	public boolean onTriggerDefaultKeyBinding(KeyBinding keyBinding, int triggerPoint, int action, Key key, boolean keyConsumed) {
+		return doForFirstKBMRet((KBM) -> KBM.onTriggerDefaultKeyBinding(keyBinding, triggerPoint, action, key, keyConsumed));
+	}
+
+	@Override
+	public void actionDefaultPress(KeyBinding keyBinding) {
+		doForFirstKBM((KBM) -> KBM.actionDefaultPress(keyBinding));
+	}
+
+	@Override
+	public void actionDefaultRelease(KeyBinding keyBinding) {
+		doForFirstKBM((KBM) -> KBM.actionDefaultRelease(keyBinding));
 	}
 
 }

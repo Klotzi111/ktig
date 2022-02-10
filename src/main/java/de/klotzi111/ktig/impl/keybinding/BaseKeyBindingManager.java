@@ -6,12 +6,12 @@ import java.util.Set;
 
 import de.klotzi111.ktig.impl.KTIGMod;
 
-public abstract class AbstractKeyBindingManager implements KeyBindingManager {
+public abstract class BaseKeyBindingManager extends KeyBindingManager {
 
 	protected final String mixinPackage;
 	protected final Set<String> additionalMixinClassPrefixes;
 
-	public AbstractKeyBindingManager(String mixinPackage, Set<String> additionalMixinClassPrefixes) {
+	public BaseKeyBindingManager(String mixinPackage, Set<String> additionalMixinClassPrefixes) {
 		this.mixinPackage = mixinPackage;
 		if (additionalMixinClassPrefixes == null) {
 			additionalMixinClassPrefixes = new HashSet<>();

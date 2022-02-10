@@ -40,7 +40,7 @@ public class KeyBindingManagerLoader {
 		PRIORITY_MODKBMSUPPLIER.clear();
 
 		addMKBMS(1050, new ModKeyBindingManagerSupplier(new ModInfo("nmuk", new MinimumModVersionChecker("1.1.0")), () -> new NmukKeyBindingManager(), null));
-		addMKBMS(1000, new ModKeyBindingManagerSupplier(new ModInfo("amecsapi", new MinimumModVersionChecker("1.2.1")), () -> new AmecsApiKeyBindingManager(), null));
+		addMKBMS(1000, new ModKeyBindingManagerSupplier(new ModInfo("amecsapi", new MinimumModVersionChecker("1.3.5")), () -> new AmecsApiKeyBindingManager(), null));
 		// vanilla
 		addMKBMS(Integer.MIN_VALUE, new ModKeyBindingManagerSupplier(new ModInfo("minecraft", new MinimumModVersionChecker("1.0.0")), () -> new VanillaKeyBindingManager(), null));
 	}
@@ -76,7 +76,8 @@ public class KeyBindingManagerLoader {
 					continue;
 				}
 
-				KeyBindingManager kbm = MKBMSupplier.keyBindingManagerSupplier.get();
+				// upperDelegate is set later
+				KeyBindingManager kbm = MKBMSupplier.keyBindingManagerFactory.createKeyBindingManager();
 				if (kbm != null) {
 					if (kbm instanceof ProxyKeyBindingManager) {
 						ProxyKeyBindingManager proxyKBM = (ProxyKeyBindingManager) kbm;
@@ -99,14 +100,22 @@ public class KeyBindingManagerLoader {
 		} else {
 			KBM = new MultipleKeyBindingManagerManager(KBMs);
 		}
+		KeyBindingManager baseKBM = KBM;
 
-		// reverse iterate
+		// reverse iterate to set delegates in proxy
 		ListIterator<ProxyKeyBindingManager> li = proxyChain.listIterator(proxyChain.size());
 		while (li.hasPrevious()) {
 			ProxyKeyBindingManager proxy = li.previous();
 			proxy.delegate = KBM;
 			KBM = proxy;
 		}
+
+		// forward iterate to set upperDelegate to all
+		for (ProxyKeyBindingManager proxy : proxyChain) {
+			proxy.upperDelegate = KBM;
+		}
+		// set upperDelegate on base KBM too
+		baseKBM.upperDelegate = KBM;
 
 		return KBM;
 	}

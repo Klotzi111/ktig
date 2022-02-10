@@ -1,6 +1,6 @@
 package de.klotzi111.ktig.impl;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Stream;
 
 import de.klotzi111.ktig.api.KTIG;
@@ -8,6 +8,7 @@ import de.klotzi111.ktig.api.KeyBindingTriggerEventListener;
 import de.klotzi111.ktig.api.KeyBindingTriggerPoints;
 import de.klotzi111.ktig.impl.keybinding.KeyBindingManagerLoader;
 import de.klotzi111.ktig.impl.util.IdentityHashStrategy;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil.Key;
@@ -45,24 +46,18 @@ public class KTIGHelper {
 	 * @return whether the event should be cancelled
 	 */
 	public static boolean processKeyBindingTrigger(int triggerPoint, long window, Key key, int action, int modifiers, boolean cancellable) {
-		KTIG.CURRENT_EVENT_KEY_CONSUMED = false;
-		// if the triggerPoint is vanilla the check in the map is inverted. Meaning if there is a keybinding registered for NO_VANILLA_BIT it will NOT be triggered when VANILLA_BIT arrives
-		boolean isVanilla = triggerPoint == KeyBindingTriggerPoints.VANILLA_BIT;
-		ObjectOpenCustomHashSet<KeyBinding> set = KTIG.TRIGGERPOINT_KEYBINDINGS.get(triggerPoint);
-		if (!isVanilla && (set == null || set.isEmpty())) {
-			return false;
+		boolean cancelFromKBM = KeyBindingManagerLoader.INSTANCE.processKeyBindingTrigger(triggerPoint, window, key, action, modifiers, cancellable);
+		if (cancelFromKBM) {
+			return true;
 		}
 
+		KTIG.CURRENT_EVENT_KEY_CONSUMED = false;
+		// creating a array every time seems inperformant and unnecessary but this way it is thread-safe without the overhead of a threadlocal
 		boolean[] cancelled = new boolean[] {false};
-		List<KeyBinding> keyBindings = KeyBindingManagerLoader.INSTANCE.getKeyBindingsForKey(key);
-		Stream<KeyBinding> keyBindingStream = keyBindings.stream();
-		if (!isVanilla) {
-			keyBindingStream = keyBindingStream.filter(kb -> set.contains(kb));
-		} else {
-			if (!(set == null || set.isEmpty())) {
-				keyBindingStream = keyBindingStream.filter(kb -> !set.contains(kb));
-			}
-		}
+
+		ObjectLinkedOpenCustomHashSet<KeyBinding> keyBindings = KeyBindingManagerLoader.INSTANCE.getKeyBindingsForKey(key);
+		Stream<KeyBinding> keyBindingStream = streamKeyBindingsMatchingTriggerPoint(triggerPoint, keyBindings);
+
 		keyBindingStream.forEach(kb -> {
 			cancelled[0] = triggerKeyBinding(kb, triggerPoint, action, key, cancelled[0]);
 			if (!cancellable) {
@@ -70,6 +65,14 @@ public class KTIGHelper {
 			}
 		});
 		return cancelled[0];
+	}
+
+	public static Stream<KeyBinding> streamKeyBindingsMatchingTriggerPoint(int triggerPoint, Collection<KeyBinding> keyBindings) {
+		ObjectOpenCustomHashSet<KeyBinding> set = KTIG.TRIGGERPOINT_KEYBINDINGS.get(triggerPoint);
+
+		Stream<KeyBinding> keyBindingStream = keyBindings.stream().filter(kb -> KeyBindingManagerLoader.INSTANCE.doesKeyBindingMatchTriggerPoint(triggerPoint, kb, set));
+
+		return keyBindingStream;
 	}
 
 	private static class DefaultKeyBindingTriggerEventListener implements KeyBindingTriggerEventListener {

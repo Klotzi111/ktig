@@ -6,8 +6,8 @@ The reason for making this library was because I have seen many mods having the 
  - Mouse buttons
  - attributes and states of other mods
 
-As of version 1.0.0 this library has support for:
- - [amecs-api](https://github.com/Siphalor/amecs-api "amecs-api on GitHub") with version 1.2.1 or higher
+As of version 1.1.0 this library has support for:
+ - [amecs-api](https://github.com/Siphalor/amecs-api "amecs-api on GitHub") with version 1.3.5 or higher
  - [nmuk](https://github.com/Siphalor/nmuk "nmuk on GitHub") with version 1.1.0 or higher
 
 ## Contributing

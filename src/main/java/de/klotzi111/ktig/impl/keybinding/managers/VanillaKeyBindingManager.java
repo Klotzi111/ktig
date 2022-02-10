@@ -1,16 +1,20 @@
 package de.klotzi111.ktig.impl.keybinding.managers;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
-import de.klotzi111.ktig.impl.keybinding.AbstractKeyBindingManager;
+import org.lwjgl.glfw.GLFW;
+
+import de.klotzi111.ktig.api.KeyBindingTriggerPoints;
+import de.klotzi111.ktig.impl.keybinding.BaseKeyBindingManager;
 import de.klotzi111.ktig.impl.mixin.keybinding.vanilla.KeyBindingAccessor;
+import de.klotzi111.ktig.impl.util.IdentityHashStrategy;
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenCustomHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.InputUtil.Key;
 
-public class VanillaKeyBindingManager extends AbstractKeyBindingManager {
+public class VanillaKeyBindingManager extends BaseKeyBindingManager {
 
 	public static final String mixinPackage = getMixinPackage("keybinding.vanilla");
 
@@ -19,7 +23,7 @@ public class VanillaKeyBindingManager extends AbstractKeyBindingManager {
 	}
 
 	public VanillaKeyBindingManager() {
-		super(mixinPackage, null);
+		this(mixinPackage, null);
 	}
 
 	@Override
@@ -33,12 +37,13 @@ public class VanillaKeyBindingManager extends AbstractKeyBindingManager {
 	}
 
 	@Override
-	public List<KeyBinding> getKeyBindingsForKey(Key key) {
+	public ObjectLinkedOpenCustomHashSet<KeyBinding> getKeyBindingsForKey(Key key) {
 		KeyBinding keyBinding = KeyBindingAccessor.getKEY_TO_BINDINGS().get(key);
-		if (keyBinding == null) {
-			return Collections.emptyList();
+		ObjectLinkedOpenCustomHashSet<KeyBinding> ret = new ObjectLinkedOpenCustomHashSet<>(keyBinding == null ? 0 : 1, IdentityHashStrategy.IDENTITY_HASH_STRATEGY);
+		if (keyBinding != null) {
+			ret.add(keyBinding);
 		}
-		return Collections.singletonList(keyBinding);
+		return ret;
 	}
 
 	@Override
@@ -51,4 +56,46 @@ public class VanillaKeyBindingManager extends AbstractKeyBindingManager {
 	public void setPressed(KeyBinding keyBinding, boolean pressed) {
 		keyBinding.setPressed(pressed);
 	}
+
+	@Override
+	public boolean doesKeyBindingMatchTriggerPoint(int triggerPoint, KeyBinding keyBinding, ObjectOpenCustomHashSet<KeyBinding> triggerPointRegisteredSet) {
+		// if the triggerPoint is vanilla the check in the map is inverted. Meaning if there is a keybinding registered for NO_VANILLA_BIT it will NOT be triggered when VANILLA_BIT arrives
+		boolean isVanilla = triggerPoint == KeyBindingTriggerPoints.VANILLA_BIT;
+		boolean isSetNullOrEmpty = triggerPointRegisteredSet == null || triggerPointRegisteredSet.isEmpty();
+		boolean isKBContainedInSet = false;
+
+		isKBContainedInSet = isSetNullOrEmpty ? false : triggerPointRegisteredSet.contains(keyBinding);
+
+		return isVanilla ? !isKBContainedInSet : isKBContainedInSet;
+	}
+
+	@Override
+	public boolean processKeyBindingTrigger(int triggerPoint, long window, Key key, int action, int modifiers, boolean cancellable) {
+		return false;
+	}
+
+	@Override
+	public boolean onTriggerDefaultKeyBinding(KeyBinding keyBinding, int triggerPoint, int action, Key key, boolean keyConsumed) {
+		if (keyBinding != null) {
+			if (action == GLFW.GLFW_RELEASE) {
+				upperDelegate.actionDefaultRelease(keyBinding);
+			} else {
+				// PRESS or REPEAT
+				upperDelegate.actionDefaultPress(keyBinding);
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void actionDefaultPress(KeyBinding keyBinding) {
+		upperDelegate.setPressed(keyBinding, true);
+		upperDelegate.incrementPressCount(keyBinding);
+	}
+
+	@Override
+	public void actionDefaultRelease(KeyBinding keyBinding) {
+		upperDelegate.setPressed(keyBinding, false);
+	}
+
 }

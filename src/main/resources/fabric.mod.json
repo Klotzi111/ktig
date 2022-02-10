@@ -38,7 +38,7 @@
     	"java": ">=8"
 	},
 	"suggests": {
-		"amecsapi": ">=1.3.3",
+		"amecsapi": ">=1.3.5",
 		"nmuk": ">=1.1.0"
 	}
 }

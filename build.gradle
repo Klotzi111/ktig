@@ -48,12 +48,14 @@ dependencies {
 	modCompileOnly("de.siphalor:amecsapi-${project.dep_amecs_target_minecraft_major_version}:1+") {
 		exclude(group: "de.siphalor")
 		exclude(module: "lazydfu")
+		exclude(group: "com.github.Klotzi111")
 	}
 	
 	//nmuk
 	modCompileOnly("de.siphalor:nmuk-${project.dep_amecs_target_minecraft_major_version}:1+") {
 		exclude(group: "de.siphalor")
 		exclude(module: "lazydfu")
+		exclude(group: "com.github.Klotzi111")
 	}
 	
 }

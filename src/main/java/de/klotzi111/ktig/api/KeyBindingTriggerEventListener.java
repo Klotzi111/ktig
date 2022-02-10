@@ -67,23 +67,15 @@ public interface KeyBindingTriggerEventListener {
 	 * @return whether the event should be canceled. If an event is cancelled after all the keyBindings of the current trigger point has been processed, the event will NOT reach further trigger points
 	 */
 	public static boolean onTriggerDefaultKeyBinding(KeyBinding keyBinding, int triggerPoint, int action, Key key, boolean keyConsumed) {
-		if (keyBinding != null) {
-			if (action == GLFW.GLFW_RELEASE) {
-				actionDefaultRelease(keyBinding);
-			} else {
-				// PRESS or REPEAT
-				actionDefaultPress(keyBinding);
-			}
-		}
-		return false;
+		return KeyBindingManagerLoader.INSTANCE.onTriggerDefaultKeyBinding(keyBinding, triggerPoint, action, key, keyConsumed);
+
 	}
 
 	public static void actionDefaultPress(KeyBinding keyBinding) {
-		KeyBindingManagerLoader.INSTANCE.setPressed(keyBinding, true);
-		KeyBindingManagerLoader.INSTANCE.incrementPressCount(keyBinding);
+		KeyBindingManagerLoader.INSTANCE.actionDefaultPress(keyBinding);
 	}
 
 	public static void actionDefaultRelease(KeyBinding keyBinding) {
-		KeyBindingManagerLoader.INSTANCE.setPressed(keyBinding, false);
+		KeyBindingManagerLoader.INSTANCE.actionDefaultRelease(keyBinding);
 	}
 }

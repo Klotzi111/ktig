@@ -1,12 +1,13 @@
 package de.klotzi111.ktig.impl.keybinding;
 
 import java.util.Collection;
-import java.util.List;
 
+import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenCustomHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil.Key;
 
-public abstract class ProxyKeyBindingManager implements KeyBindingManager {
+public abstract class ProxyKeyBindingManager extends KeyBindingManager {
 
 	/**
 	 * this value is set after construction
@@ -52,8 +53,33 @@ public abstract class ProxyKeyBindingManager implements KeyBindingManager {
 	}
 
 	@Override
-	public List<KeyBinding> getKeyBindingsForKey(Key key) {
+	public ObjectLinkedOpenCustomHashSet<KeyBinding> getKeyBindingsForKey(Key key) {
 		return delegate.getKeyBindingsForKey(key);
+	}
+
+	@Override
+	public boolean doesKeyBindingMatchTriggerPoint(int triggerPoint, KeyBinding keyBinding, ObjectOpenCustomHashSet<KeyBinding> triggerPointRegisteredSet) {
+		return delegate.doesKeyBindingMatchTriggerPoint(triggerPoint, keyBinding, triggerPointRegisteredSet);
+	}
+
+	@Override
+	public boolean processKeyBindingTrigger(int triggerPoint, long window, Key key, int action, int modifiers, boolean cancellable) {
+		return delegate.processKeyBindingTrigger(triggerPoint, window, key, action, modifiers, cancellable);
+	}
+
+	@Override
+	public boolean onTriggerDefaultKeyBinding(KeyBinding keyBinding, int triggerPoint, int action, Key key, boolean keyConsumed) {
+		return delegate.onTriggerDefaultKeyBinding(keyBinding, triggerPoint, action, key, keyConsumed);
+	}
+
+	@Override
+	public void actionDefaultPress(KeyBinding keyBinding) {
+		delegate.actionDefaultPress(keyBinding);
+	}
+
+	@Override
+	public void actionDefaultRelease(KeyBinding keyBinding) {
+		delegate.actionDefaultRelease(keyBinding);
 	}
 
 }
