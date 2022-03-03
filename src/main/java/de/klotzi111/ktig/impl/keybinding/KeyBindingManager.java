@@ -1,6 +1,7 @@
 package de.klotzi111.ktig.impl.keybinding;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -29,7 +30,9 @@ public abstract class KeyBindingManager {
 
 	public abstract String getMixinPackage();
 
-	public abstract Collection<String> getAdditionalMixinClassPrefixes();
+	public abstract Set<String> getAdditionalMixinClassPrefixes();
+
+	public abstract List<VersionedMixinClassGroup> getVersionedMixinClassGroups();
 
 	public abstract Key getKeyFromKeyboard(int keycode, int scancode);
 

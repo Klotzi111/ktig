@@ -45,13 +45,22 @@ public class MultipleKeyBindingManagerManager extends KeyBindingManager {
 	}
 
 	@Override
-	public Collection<String> getAdditionalMixinClassPrefixes() {
+	public Set<String> getAdditionalMixinClassPrefixes() {
 		Set<String> prefixes = new HashSet<>();
 		doForEachKBM((KBM) -> {
 			prefixes.add(KBM.getMixinPackage());
 			prefixes.addAll(KBM.getAdditionalMixinClassPrefixes());
 		});
 		return prefixes;
+	}
+
+	@Override
+	public List<VersionedMixinClassGroup> getVersionedMixinClassGroups() {
+		List<VersionedMixinClassGroup> versionedMixinClassGroups = new ArrayList<>();
+		doForEachKBM((KBM) -> {
+			versionedMixinClassGroups.addAll(KBM.getVersionedMixinClassGroups());
+		});
+		return versionedMixinClassGroups;
 	}
 
 	private Key getMostReportedKey(Function<KeyBindingManager, Key> function, Supplier<String> errorMessageSupplier) {

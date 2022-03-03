@@ -1,6 +1,7 @@
 package de.klotzi111.ktig.impl.keybinding;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenCustomHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
@@ -28,8 +29,13 @@ public abstract class ProxyKeyBindingManager extends KeyBindingManager {
 	}
 
 	@Override
-	public Collection<String> getAdditionalMixinClassPrefixes() {
+	public Set<String> getAdditionalMixinClassPrefixes() {
 		return delegate.getAdditionalMixinClassPrefixes();
+	}
+
+	@Override
+	public List<VersionedMixinClassGroup> getVersionedMixinClassGroups() {
+		return delegate.getVersionedMixinClassGroups();
 	}
 
 	@Override

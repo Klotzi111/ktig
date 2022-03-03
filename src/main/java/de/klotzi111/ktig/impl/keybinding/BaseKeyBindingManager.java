@@ -1,7 +1,8 @@
 package de.klotzi111.ktig.impl.keybinding;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import de.klotzi111.ktig.impl.KTIGMod;
@@ -9,14 +10,11 @@ import de.klotzi111.ktig.impl.KTIGMod;
 public abstract class BaseKeyBindingManager extends KeyBindingManager {
 
 	protected final String mixinPackage;
-	protected final Set<String> additionalMixinClassPrefixes;
+	protected final Set<String> additionalMixinClassPrefixes = new HashSet<>();
+	protected final List<VersionedMixinClassGroup> versionedMixinClassGroups = new ArrayList<>();
 
-	public BaseKeyBindingManager(String mixinPackage, Set<String> additionalMixinClassPrefixes) {
+	public BaseKeyBindingManager(String mixinPackage) {
 		this.mixinPackage = mixinPackage;
-		if (additionalMixinClassPrefixes == null) {
-			additionalMixinClassPrefixes = new HashSet<>();
-		}
-		this.additionalMixinClassPrefixes = additionalMixinClassPrefixes;
 	}
 
 	@Override
@@ -25,8 +23,13 @@ public abstract class BaseKeyBindingManager extends KeyBindingManager {
 	}
 
 	@Override
-	public Collection<String> getAdditionalMixinClassPrefixes() {
+	public Set<String> getAdditionalMixinClassPrefixes() {
 		return additionalMixinClassPrefixes;
+	}
+
+	@Override
+	public List<VersionedMixinClassGroup> getVersionedMixinClassGroups() {
+		return versionedMixinClassGroups;
 	}
 
 	private static final String MIXIN_PACKAGE_NAME = "mixin";

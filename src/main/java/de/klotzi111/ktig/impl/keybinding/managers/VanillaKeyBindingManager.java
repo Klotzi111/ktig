@@ -1,7 +1,5 @@
 package de.klotzi111.ktig.impl.keybinding.managers;
 
-import java.util.Set;
-
 import org.lwjgl.glfw.GLFW;
 
 import de.klotzi111.ktig.api.KeyBindingTriggerPoints;
@@ -18,12 +16,12 @@ public class VanillaKeyBindingManager extends BaseKeyBindingManager {
 
 	public static final String mixinPackage = getMixinPackage("keybinding.vanilla");
 
-	protected VanillaKeyBindingManager(String mixinPackage, Set<String> additionalMixinClasses) {
-		super(mixinPackage, additionalMixinClasses);
+	protected VanillaKeyBindingManager(String mixinPackage) {
+		super(mixinPackage);
 	}
 
 	public VanillaKeyBindingManager() {
-		this(mixinPackage, null);
+		this(mixinPackage);
 	}
 
 	@Override

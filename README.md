@@ -1,5 +1,7 @@
 # KTIG (short for: Keybinding Testing In GUI)
 
+Works for Minecraft versions: 1.17+
+
 This fabric library mod provides methods for testing whether Minecraft keybindings are pressed while the game shows a GUI. It also works when no GUI is shown.
 
 The reason for making this library was because I have seen many mods having the problem of checking keys bound to keybindings being pressed in GUIs but do not deal with special cases like:

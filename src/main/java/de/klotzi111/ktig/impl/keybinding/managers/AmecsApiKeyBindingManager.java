@@ -1,8 +1,12 @@
 package de.klotzi111.ktig.impl.keybinding.managers;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 import org.lwjgl.glfw.GLFW;
 
 import de.klotzi111.ktig.impl.KTIGHelper;
+import de.klotzi111.ktig.impl.keybinding.VersionedMixinClassGroup;
 import de.siphalor.amecs.impl.AmecsAPI;
 import de.siphalor.amecs.impl.KeyBindingManager;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenCustomHashSet;
@@ -14,9 +18,11 @@ public class AmecsApiKeyBindingManager extends VanillaKeyBindingManager {
 	public static final String mixinPackage = getMixinPackage("keybinding.amecsapi");
 
 	public AmecsApiKeyBindingManager() {
-		super(mixinPackage, null);
+		super(mixinPackage);
 		String vanillaMixinPackage = VanillaKeyBindingManager.mixinPackage;
 		additionalMixinClassPrefixes.add(vanillaMixinPackage);
+
+		versionedMixinClassGroups.add(new VersionedMixinClassGroup(mixinPackage + ".versioned", new HashSet<>(Arrays.asList("MixinMouse_1_14", "MixinMouse_1_18_2"))));
 	}
 
 	@Override

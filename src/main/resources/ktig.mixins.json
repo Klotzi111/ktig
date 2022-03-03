@@ -9,7 +9,9 @@
 		"keybinding.vanilla.MixinKeyboard",
 		"keybinding.vanilla.MixinMouse",
 		
-		"keybinding.amecsapi.MixinMouse"
+		"keybinding.amecsapi.MixinMouse",
+		"keybinding.amecsapi.versioned.MixinMouse_1_14",
+		"keybinding.amecsapi.versioned.MixinMouse_1_18_2"
 	],
 	"server": [],
 	"injectors": {
