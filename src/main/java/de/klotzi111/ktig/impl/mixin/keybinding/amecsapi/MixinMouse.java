@@ -53,9 +53,7 @@ public class MixinMouse implements de.klotzi111.ktig.impl.duck.IMouse {
 	// could also inject at head
 	@Inject(method = "onMouseScroll", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/Window;getHandle()J", ordinal = 0), cancellable = true)
 	private void injection_ALL_WINDOWS(long window, double horizontal, double vertical, CallbackInfo ci) {
-		// this is the line calculating the deltaY from Minecraft Mouse
-		// this line must be updated if it changes in the MC code
-		double deltaY = (client.options.discreteMouseScroll ? Math.signum(vertical) : vertical) * client.options.mouseWheelSensitivity;
+		double deltaY = MixinMouseImpl.calculateDeltaY(client, vertical);
 
 		int triggerPoint = KeyBindingTriggerPoints.ALL_WINDOWS_BIT;
 		if (MixinMouseImpl.onScrollReceived(this, triggerPoint, deltaY, new ProcessKeyBindingTriggerKeyAndPressDefault(window, triggerPoint), true, 0)) {

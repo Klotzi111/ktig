@@ -7,9 +7,9 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import de.klotzi111.fabricmultiversionhelper.api.version.MinecraftVersionHelper;
 import de.klotzi111.ktig.impl.keybinding.KeyBindingManagerLoader;
 import de.klotzi111.ktig.impl.keybinding.VersionedMixinClassGroup;
-import de.klotzi111.ktig.impl.version.MinecraftVersionHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.SemanticVersion;

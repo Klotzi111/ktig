@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    include(modApi("com.github.Klotzi111:ktig:main-SNAPSHOT"))
+	include(modApi("com.github.Klotzi111:ktig:main-SNAPSHOT"))
 }
 ```
 
@@ -41,11 +41,11 @@ Do the following to use this library mod:
  
 ```groovy
 repositories {
-    mavenLocal()
+	mavenLocal()
 }
 
 dependencies {
-    include(modApi("de.klotzi111:KTIG:1+"))
+	include(modApi("de.klotzi111:KTIG:1+"))
 }
 ```
 

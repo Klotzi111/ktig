@@ -1,10 +1,12 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
+	id 'fabric-loom' version '0.12-SNAPSHOT'
 	id 'maven-publish'
 }
 
 ext {
 	jdk_version = 8
+	
+	klotzi111_localDeps = "true".equals(System.getenv("klotzi111_localDeps"))
 }
 
 sourceCompatibility = jdk_version
@@ -13,9 +15,6 @@ targetCompatibility = jdk_version
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
-
-minecraft {
-}
 
 repositories {
 	mavenLocal()
@@ -31,6 +30,19 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+	// FabricMultiVersionHelper
+	include(modApi(klotzi111_localDeps ? "de.klotzi111:FabricMultiVersionHelper:1+" : "com.github.Klotzi111:FabricMultiVersionHelper:main-SNAPSHOT"))
+
+	//amecs api
+	modCompileOnly(klotzi111_localDeps ? "de.siphalor:amecsapi-${project.dep_amecs_target_minecraft_major_version}:1+" : "com.github.Klotzi111:amecs-api:main-SNAPSHOT") {
+		exclude(group: "*")
+	}
+	
+	//nmuk
+	modCompileOnly(klotzi111_localDeps ? "de.siphalor:nmuk-${project.dep_amecs_target_minecraft_major_version}:1+" : "com.github.Klotzi111:nmuk:main-SNAPSHOT") {
+		exclude(group: "*")
+	}
+	
 	// we need those old api versions because newer versions require java 16 and that is not available on older minecraft versions
 	// these old fabric apis are required because we want to support down to minecraft 1.14
 	def fabric_deps = [
@@ -39,25 +51,9 @@ dependencies {
 			"fabric-resource-loader-v0": "0.1.5+4ea4772942"
 	]
 	for (dep in fabric_deps.entrySet()) {
-		// is the new way to go but does not work
-		// def depModule = fabricApi.module(dep.getKey(), dep.getValue())
 		include(modApi("net.fabricmc.fabric-api:" + dep.getKey() + ":" + dep.getValue()))
 	}
 
-	//amecs api
-	modCompileOnly("de.siphalor:amecsapi-${project.dep_amecs_target_minecraft_major_version}:1+") {
-		exclude(group: "de.siphalor")
-		exclude(module: "lazydfu")
-		exclude(group: "com.github.Klotzi111")
-	}
-	
-	//nmuk
-	modCompileOnly("de.siphalor:nmuk-${project.dep_amecs_target_minecraft_major_version}:1+") {
-		exclude(group: "de.siphalor")
-		exclude(module: "lazydfu")
-		exclude(group: "com.github.Klotzi111")
-	}
-	
 }
 
 processResources {
